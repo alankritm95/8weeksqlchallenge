@@ -62,6 +62,23 @@ s.product_id = m.product_id group by product_name order by total_count desc limi
 
 ### 5. Which item was the most popular for each customer?
 
+with cte as (
+  SELECT product_name,
+          customer_id,
+          count(product_name) AS order_count,
+          rank() over(PARTITION BY customer_id
+                      ORDER BY count(product_name) DESC) AS rank_number
+   FROM menu
+   INNER JOIN sales ON menu.product_id = sales.product_id
+   GROUP BY customer_id,
+            product_name
+            )
+  select product_name,
+          customer_id, order_count from cte where rank_number = 1;     
+
+![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/32f58547-cab3-452d-b019-6b8d214db6ec)
+
+
 
 
 
