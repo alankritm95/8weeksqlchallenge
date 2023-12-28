@@ -29,5 +29,14 @@ Three pivotal datasets form the foundation of this case study:
 
 ## Question and Solution
 
+### 1. What is the total amount each customer spent at the restaurant?
+   
+Select customer_id, sum(price) from sales s join menu m on 
+s.product_id = m.product_id group by customer_id
+order by customer_id;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/f388d606-b1dc-498c-b265-6f3121cbaaaa)
+
+
 
 
