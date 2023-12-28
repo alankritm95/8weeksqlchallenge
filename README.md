@@ -37,6 +37,14 @@ order by customer_id;
 
 ![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/f388d606-b1dc-498c-b265-6f3121cbaaaa)
 
+### 2. How many days has each customer visited the restaurant?
+
+select customer_id, count(distinct order_date) as total_days from sales group by customer_id;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/92707033-eef8-42b7-a29f-4fd77ca264b8)
+
+
+
 
 
 
