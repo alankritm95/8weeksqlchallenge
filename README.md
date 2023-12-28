@@ -93,6 +93,79 @@ select customer_id, product_name from cte join menu on
 
  ![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/ee7ba277-6b6b-4976-a10f-13c9561c13c0)
 
+### 7. Which item was purchased just before the customer became a member?
+
+with cte as(
+select m.customer_id, product_id, order_date, 
+dense_rank() over(partition by m.customer_id order by order_date) as rnk
+from sales s right join members m
+on s.customer_id = m.customer_id and
+join_date >= order_date )
+
+select customer_id, product_name from cte join menu on
+ cte.product_id = menu.product_id
+ where rnk = 1;
+
+ ![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/d6992a59-7c06-4ae9-8fba-c511859b957e)
+
+ ### 8. What is the total items and amount spent for each member before they became a member?
+
+with cte as(
+select m.customer_id, product_id, order_date, 
+dense_rank() over(partition by m.customer_id order by order_date) as rnk
+from sales s right join members m
+on s.customer_id = m.customer_id and
+join_date > order_date )
+
+select customer_id, count(product_name) as count,sum(price) as total_price from cte join menu on
+ cte.product_id = menu.product_id
+ group by customer_id;
+
+ ![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/35b3bf04-246a-4eff-b3b6-34290198e018)
+
+
+ ### 9. If each $1 spent equates to 10 points and sushi has a 2x points multiplier — how many points would each customer have?
+
+with cte as (
+  select product_id, product_name, 
+  case when product_name = 'sushi' then 20 * price 
+  else 10 * price 
+  end as 'points'
+  from menu)
+  
+  select customer_id, sum(points) as total_points from cte c join sales s
+  on c.product_id = s.product_id group by customer_id;
+
+  ![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/3fca19d6-1977-473d-9f2a-5d8bcf009d41)
+
+ ### 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January
+
+  WITH first_week AS
+  (SELECT join_date,
+          DATE_ADD(join_date, INTERVAL 6 DAY) AS week,
+          customer_id
+   FROM members)
+SELECT s.customer_id,
+       SUM(CASE
+               WHEN order_date BETWEEN join_date AND week THEN price*10*2
+               WHEN order_date NOT BETWEEN join_date AND week
+                    AND product_name = 'sushi' THEN price*10*2
+               WHEN order_date NOT BETWEEN join_date AND week
+                    AND product_name != 'sushi' THEN price*10
+           END) AS points
+FROM menu AS m
+INNER JOIN sales s ON m.product_id = s.product_id
+INNER JOIN first_week AS mem ON mem.customer_id = s.customer_id
+AND order_date <='2021-01-31'
+AND order_date >=join_date
+GROUP BY s.customer_id
+ORDER BY s.customer_id;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/e06a2c9e-66e5-4cb2-a57f-3f9c14cf669b)
+
+
+ 
+
 
  
 
