@@ -78,6 +78,24 @@ with cte as (
 
 ![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/32f58547-cab3-452d-b019-6b8d214db6ec)
 
+### 6. Which item was purchased first by the customer after they became a member?
+
+with cte as(
+select m.customer_id, product_id, order_date, 
+dense_rank() over(partition by m.customer_id order by order_date) as rnk
+from sales s right join members m
+on s.customer_id = m.customer_id and
+order_date >= join_date)
+
+select customer_id, product_name from cte join menu on
+ cte.product_id = menu.product_id
+ where rnk = 1 order by customer_id;
+
+ ![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/ee7ba277-6b6b-4976-a10f-13c9561c13c0)
+
+
+ 
+
 
 
 
