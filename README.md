@@ -53,6 +53,17 @@ select customer_id, product_name from cte where dr = 1 group by customer_id, pro
 
 ![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/34aa1f8e-294b-4173-8707-d9e24b7e4a05)
 
+### 4. What is the most purchased item on the menu and how many times was it purchased by all customers?
+
+Select product_name, count(product_name) as total_count from sales s join menu m on
+s.product_id = m.product_id group by product_name order by total_count desc limit 1;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/161d53e8-f5ed-40a1-a757-e10232f65f71)
+
+### 5. Which item was the most popular for each customer?
+
+
+
 
 
 
