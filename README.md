@@ -43,6 +43,19 @@ select customer_id, count(distinct order_date) as total_days from sales group by
 
 ![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/92707033-eef8-42b7-a29f-4fd77ca264b8)
 
+### 3. What was the first item from the menu purchased by each customer?
+
+with cte as 
+(select customer_id, product_name, dense_rank() over(partition by customer_id order by order_date) as dr from sales s join menu m 
+on s.product_id = m.product_id )
+
+select customer_id, product_name from cte where dr = 1 group by customer_id, product_name;
+
+![image](https://github.com/alankritm95/8weeksqlchallenge/assets/129503746/34aa1f8e-294b-4173-8707-d9e24b7e4a05)
+
+
+
+
 
 
 
